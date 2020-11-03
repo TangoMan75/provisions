@@ -37,3 +37,19 @@ fi
 ./utils/install_p7zip-full.sh
 
 ./clean.sh
+
+# dconf-editor:       gnome config
+# sublime-text:       text editor
+# station:            multi channel messenger
+# vim:                cli text editor
+# vlc:                music/video player
+# chrome:             browser
+# curl:               cli http client
+# libreoffice-calc:   spread sheet editor
+# libreoffice-writer: rich text editor
+# dropbox:            online storage
+# torbrowser:         anonymous web browser
+# openssh-server:     ssh server
+# gparted:            partition manager
+# make:               gnome scripting language
+# p7zip-full:         archive
