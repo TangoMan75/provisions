@@ -1,0 +1,38 @@
+[
+  {
+    "caption": "-"
+  },
+  {
+    "caption": "Open Terminal Here",
+    "command": "terminal"
+  },
+  {
+    "caption": "Execute This",
+    "command": "execute"
+  },
+  {
+    "caption": "Shellcheck This",
+    "command": "shellcheck"
+  },
+  {
+    "caption": "-"
+  },
+  {
+    "caption": "Clipboard Diff",
+    "command": "easy_diff_compare_both",
+    "args": {
+      "clipboard": true
+    }
+  },
+  {
+    "caption": "Git Diff",
+    "command": "easy_diff_git"
+  },
+  {
+    "caption": "-"
+  },
+  {
+    "caption": "Format PHP Array Console Dump",
+    "command": "format_php_array"
+  }
+]

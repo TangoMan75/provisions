@@ -1,0 +1,74 @@
+#!/bin/bash
+
+#/*
+# * This file is part of TangoMan Provisions package.
+# *
+# * Copyright (c) 2021 "Matthias Morin" <mat@tangoman.io>
+# *
+# * This source file is subject to the MIT license that is bundled
+# * with this source code in the file LICENSE.
+# */
+
+#/**
+# * sublime-text
+# *
+# * text editor
+# *
+# * Find current scope in console:
+# * ```python
+# * view.scope_name(view.sel()[0].begin())
+# * ```
+# *
+# * @link     https://gist.github.com/J2TeaM/a54bafb082f90c0f20c9
+# * @link     https://www.sublimetext.com/docs/scope_naming.html
+# * @category ide
+# */
+
+CURDIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
+# shellcheck source=/dev/null
+. "${CURDIR}/../tools/src/colors/colors.sh"
+
+alert_primary 'Install Sublime Text'
+
+if [ ! -x "$(command -v wget)" ]; then
+    echo_error "\"$(basename "${0}")\" requires wget, try: 'sudo apt-get install -y wget'"
+    exit 1
+fi
+
+# install the gpg key
+echo_info 'wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -'
+wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+
+# ensure apt is set up to work with https sources:
+echo_info 'sudo apt-get install apt-transport-https'
+sudo apt-get install apt-transport-https
+
+# stable channel
+# sudo add-apt-repository --yes -u 'https://download.sublimetext.com/ apt/stable'
+echo_info 'echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list'
+echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
+
+# update apt sources
+echo_info 'sudo apt-get update'
+sudo apt-get update
+
+echo_info 'sudo apt-get install --assume-yes apt-transport-https'
+sudo apt-get install --assume-yes apt-transport-https
+
+echo_info 'sudo apt-get install --assume-yes sublime-text'
+sudo apt-get install --assume-yes sublime-text
+
+# create desktop shortcut
+cat > ~/Desktop/sublime_text.desktop<<EOF
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Sublime Text
+GenericName=Text Editor
+Comment=Sophisticated text editor for code, markup and prose
+Exec=/opt/sublime_text/sublime_text %F
+Terminal=false
+Icon=sublime-text
+Categories=TextEditor;Development;
+StartupNotify=true
+EOF

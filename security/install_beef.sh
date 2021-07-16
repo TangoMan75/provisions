@@ -1,0 +1,66 @@
+#!/bin/bash
+
+#/*
+# * This file is part of TangoMan Provisions package.
+# *
+# * Copyright (c) 2021 "Matthias Morin" <mat@tangoman.io>
+# *
+# * This source file is subject to the MIT license that is bundled
+# * with this source code in the file LICENSE.
+# */
+
+#/**
+# * beef
+# *
+# * browser exploitation framework
+# *
+# * @category security
+# * @link     https://beefproject.com
+# */
+
+CURDIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
+# shellcheck source=/dev/null
+. "${CURDIR}/../tools/src/colors/colors.sh"
+
+if [ ! -x "$(command -v git)" ]; then
+    echo_error "\"$(basename "${0}")\" requires git, try: 'apt-get install -y git'"
+    exit 1
+fi
+
+if [ ! -x "$(command -v ruby)" ]; then
+    echo_error "\"$(basename "${0}")\" requires ruby, try: 'apt-get install -y ruby'"
+    exit 1
+fi
+
+# clone project
+echo_info 'git clone --depth 1 https://github.com/beefproject/beef ~/.beef'
+git clone --depth 1 https://github.com/beefproject/beef ~/.beef
+
+# Install requirements from within the .beef folder
+(
+    echo_info 'cd ~/.beef || exit 1'
+    cd ~/.beef || exit 1
+
+    # cleaning git cache
+    echo_info 'rm -rf .git'
+    rm -rf .git
+
+    # install gems
+    if [ -w Gemfile.lock ]; then
+        rm -f Gemfile.lock
+    fi
+
+    echo_info 'sudo ./install'
+    sudo ./install
+
+    # change credentials
+    echo_info "sed -i -E '/^\s{8}user/ s/:\s*\"\w+\"/: \"root\"/' ./config.yaml"
+    sed -i -E '/^\s{8}user/ s/:\s*"\w+"/: "root"/' ./config.yaml
+
+    echo_info "sed -i -E '/^\s{8}passwd/ s/:\s*\"\w+\"/: \"toor\"/' ./config.yaml"
+    sed -i -E '/^\s{8}passwd/ s/:\s*"\w+"/: "toor"/' ./config.yaml
+
+    # use port 80
+    echo_info "sed -i -E '/^\s{8}port/ s/:\s*\"[0-9]+\"/: \"80\"/' ./config.yaml"
+    sed -i -E '/^\s{8}port/ s/:\s*"[0-9]+"/: "80"/' ./config.yaml
+)

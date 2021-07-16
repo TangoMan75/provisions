@@ -1,0 +1,46 @@
+#!/bin/bash
+
+#/*
+# * This file is part of TangoMan Provisions package.
+# *
+# * Copyright (c) 2021 "Matthias Morin" <mat@tangoman.io>
+# *
+# * This source file is subject to the MIT license that is bundled
+# * with this source code in the file LICENSE.
+# */
+
+#/**
+# * openssh-server
+# * secure shell protocol
+# *
+# * Start ssh server
+# * sudo systemctl start ssh
+# * 
+# * Stop ssh server
+# * sudo systemctl stop ssh
+# * 
+# * Restart ssh server
+# * sudo systemctl restart ssh
+# *
+# * @category servers
+# */
+
+CURDIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
+# shellcheck source=/dev/null
+. "${CURDIR}/../tools/src/colors/colors.sh"
+
+alert_primary 'Install openssh-server'
+
+echo_info 'sudo apt-get install --assume-yes openssh-server'
+sudo apt-get install --assume-yes openssh-server
+
+# create autostart shortcut
+cat > ~/.config/autostart/openssh-server.desktop<<EOF
+[Desktop Entry]
+Name=Open SSH Server
+Comment=Open SSH Server
+Exec=sudo systemctl start ssh
+Type=Application
+Terminal=false
+Hidden=false
+EOF
