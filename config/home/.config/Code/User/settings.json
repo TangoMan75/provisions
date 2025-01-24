@@ -1,0 +1,19 @@
+{
+    "editor.autoIndent": "full",
+    "editor.detectIndentation": true,
+    "editor.fontSize": 12,
+    "editor.formatOnPaste": false,
+    "editor.inlineSuggest.enabled": true,
+    "editor.multiCursorModifier": "alt",
+    "editor.snippetSuggestions": "top",
+    "editor.useTabStops": true,
+    "editor.wordWrap": "off",
+    "files.autoSave": "afterDelay",
+    "files.hotExit": "off",
+    "workbench.colorTheme": "Monokai",
+    "workbench.startupEditor": "none",
+    "emmet.includeLanguages": {
+        "twig": "html",
+        "volt": "html"
+    },
+}
