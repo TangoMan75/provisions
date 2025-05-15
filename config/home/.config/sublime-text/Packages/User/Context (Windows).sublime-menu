@@ -1,0 +1,44 @@
+[
+  {
+    "caption": "-"
+  },
+  {
+    "caption": "Open Command Prompt/Git Bash Here",
+    "command": "terminal"
+  },
+  {
+    "caption": "Execute This",
+    "command": "execute"
+  },
+  {
+    "caption": "Shellcheck This",
+    "command": "shellcheck"
+  },
+  {
+    "caption": "-"
+  },
+  {
+    "command": "easy_diff_compare_both",
+    "args": {
+      "clipboard": true
+    }
+  },
+  {
+    "caption": "Git Diff",
+    "command": "easy_diff_git"
+  },
+  {
+    "caption": "Git Diff with Previous Revision",
+    "command": "easy_diff_git",
+    "args": {
+      "last": true
+    }
+  },
+  {
+    "caption": "-"
+  },
+  {
+    "caption": "Format PHP Array Console Dump",
+    "command": "format_php_array"
+  }
+]
