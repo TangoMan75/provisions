@@ -1,0 +1,45 @@
+{
+	"auto_indent": true,
+	"detect_indentation": true,
+	"enable_telemetry": "disabled",
+	"file_exclude_patterns":
+	[
+		"*.pyc",
+		"*.pyo",
+		"*.exe",
+		"*.dll",
+		"*.obj",
+		"*.o",
+		"*.a",
+		"*.lib",
+		"*.so",
+		"*.dylib",
+		"*.ncb",
+		"*.sdf",
+		"*.suo",
+		"*.pdb",
+		"*.idb",
+		".DS_Store",
+		"*.class",
+		"*.psd",
+		"*.sublime-workspace"
+	],
+	"folder_exclude_patterns":
+	[
+		".git",
+		".hg",
+		".svn",
+		"CVS"
+	],
+	"font_size": 10,
+	"hot_exit": false,
+	"ignored_packages":
+	[
+		"Vintage"
+	],
+	"show_encoding": true,
+	"translate_tabs_to_spaces": true,
+	"use_tab_stops": true,
+	"word_wrap": false,
+	"wrap_width": 120
+}

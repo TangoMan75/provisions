@@ -1,0 +1,12 @@
+{
+	"extensions":
+	[
+		"md"
+	],
+	"word_wrap": false,
+	"wrap_width": 120,
+	"translate_tabs_to_spaces": false,
+	"enable_table_editor": true,
+	"delimiter": "|",
+	"auto_quote": false
+}

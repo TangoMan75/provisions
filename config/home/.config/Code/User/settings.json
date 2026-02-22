@@ -1,0 +1,24 @@
+{
+    "editor.autoIndent": "full",
+    "editor.detectIndentation": true,
+    "editor.fontSize": 12,
+    "editor.formatOnPaste": false,
+    "editor.inlineSuggest.enabled": true,
+    "editor.multiCursorModifier": "alt",
+    "editor.snippetSuggestions": "top",
+    "editor.useTabStops": true,
+    "editor.wordWrap": "off",
+    "files.autoSave": "off",
+    "files.hotExit": "off",
+    "workbench.colorTheme": "Monokai",
+    "workbench.colorCustomizations": {
+        "tab.inactiveBackground": "#1e1f1c"
+    },
+    "workbench.startupEditor": "none",
+    "emmet.includeLanguages": {
+        "twig": "html"
+    },
+    "git.openRepositoryInParentFolders": "never",
+    "extensions.ignoreRecommendations": true,
+    "terminal.integrated.fontFamily": "'MesloLGS Nerd Font', 'Droid Sans Mono', 'monospace', monospace"
+}

@@ -1,0 +1,103 @@
+{
+  "scope": "markdown.raw",
+  "completions": [
+    {
+      "trigger": "bash",
+      "annotation": "bash",
+      "contents": "```bash\n\\$ $0\n```",
+      "kind": "snippet",
+      "details": "bash markup for markdown"
+    },
+    {
+      "trigger": "cmd",
+      "annotation": "cmd",
+      "contents": "```cmd\n\\$ $0\n```",
+      "kind": "snippet",
+      "details": "cmd markup for markdown"
+    },
+    {
+      "trigger": "css",
+      "annotation": "css",
+      "contents": "```css\n$1: {\n    $2: $3;\n}\n```",
+      "kind": "snippet",
+      "details": "css markup for markdown"
+    },
+    {
+      "trigger": "diff",
+      "annotation": "diff",
+      "contents": "```diff\n- $1\n+ $2\n```",
+      "kind": "snippet",
+      "details": "diff markup for markdown"
+    },
+    {
+      "trigger": "javascript",
+      "annotation": "javascript",
+      "contents": "```javascript\nfunction (e) {\n    $0\n}\n```",
+      "kind": "snippet",
+      "details": "javascript markup for markdown"
+    },
+    {
+      "trigger": "json",
+      "annotation": "json",
+      "contents": "```json\n[\n    {\n        \"$0\": \"$1\"\n    }\n]\n```",
+      "kind": "snippet",
+      "details": "json markup for markdown"
+    },
+    {
+      "trigger": "php",
+      "annotation": "php",
+      "contents": "```php\n<?php\n\n$0\n```",
+      "kind": "snippet",
+      "details": "php markup for markdown"
+    },
+    {
+      "trigger": "phpstorm",
+      "annotation": "phpstorm",
+      "contents": "[$1](phpstorm://open?file=$2&line=$0)",
+      "kind": "snippet",
+      "details": "phpstorm markup for markdown"
+    },
+    {
+      "trigger": "python",
+      "annotation": "python",
+      "contents": "```python\n\\$ $0\n```",
+      "kind": "snippet",
+      "details": "python markup for markdown"
+    },
+    {
+      "trigger": "shell",
+      "annotation": "shell",
+      "contents": "```shell\n\\$ $0\n```",
+      "kind": "snippet",
+      "details": "shell markup for markdown"
+    },
+    {
+      "trigger": "sublime",
+      "annotation": "sublime",
+      "contents": "[$1](sublime://open?file=$2&line=$0)",
+      "kind": "snippet",
+      "details": "sublime markup for markdown"
+    },
+    {
+      "trigger": "twig",
+      "annotation": "twig",
+      "contents": "```twig\n{% block $1 %}\n    {{ $2 }}\n{% end block %}\n```",
+      "kind": "snippet",
+      "details": "twig markup for markdown"
+    },
+    {
+      "trigger": "yaml",
+      "annotation": "yaml",
+      "contents": "```yaml\n\\$ $0\n```",
+      "kind": "snippet",
+      "details": "yaml markup for markdown"
+    },
+    {
+      "trigger": "yml",
+      "annotation": "yaml",
+      "contents": "```yaml\n\\$ $0\n```",
+      "kind": "snippet",
+      "details": "yaml markup for markdown"
+    },
+  ]
+}
