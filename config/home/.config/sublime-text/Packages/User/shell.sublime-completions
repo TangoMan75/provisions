@@ -1,0 +1,19 @@
+{
+  "scope": "source.shell",
+  "completions": [
+    {
+      "trigger": "\\$",
+      "annotation": "Expand variable",
+      "contents": "\"\\${$0}\"",
+      "kind": "snippet",
+      "details": "Expand variable"
+    },
+    {
+      "trigger": "!",
+      "annotation": "Expand header",
+      "contents": "#!/bin/sh\n\n#/*\n# * This file is part of TangoMan package.\n# *\n# * Copyright (c) 2026 \"Matthias Morin\" <mat@tangoman.io>\n# *\n# * This source file is subject to the MIT license that is bundled\n# * with this source code in the file LICENSE.\n# */\n\n",
+      "kind": "snippet",
+      "details": "Expand header"
+    }
+  ]
+}

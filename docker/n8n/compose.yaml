@@ -1,0 +1,29 @@
+---
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    ports:
+      - "5678:5678"
+    volumes:
+      - ./data:/home/node/.n8n
+    networks:
+      - traefik
+    labels:
+      traefik.enable: true
+      traefik.http.services.n8n.loadbalancer.server.port: 5678
+
+      # allow http trafic on local server
+      traefik.http.routers.n8n-http.entrypoints: web
+      traefik.http.routers.n8n-http.rule: Host(`n8n.localhost`)
+
+      # https configuration
+      traefik.http.routers.n8n-https.entrypoints: websecure
+      traefik.http.routers.n8n-https.rule: Host(`n8n.localhost`)
+      traefik.http.routers.n8n-https.middlewares: security@file, compression@file
+      traefik.http.routers.n8n-https.tls: true
+
+networks:
+  traefik:
+    external: true
