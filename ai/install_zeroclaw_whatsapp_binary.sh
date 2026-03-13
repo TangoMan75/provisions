@@ -42,6 +42,6 @@ _alert_primary "Install ${APP_NAME}"
 
 #--------------------------------------------------
 
-_echo_info "cp \"./${APP_NAME}-v${VERSION}\" \"${DESTINATION}\"\n"
-cp "./${APP_NAME}-v${VERSION}" "${DESTINATION}"
+_echo_info "cp \"./${APP_NAME}-${VERSION}\" \"${DESTINATION}\"\n"
+cp "./${APP_NAME}-${VERSION}" "${DESTINATION}"
 

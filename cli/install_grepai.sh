@@ -11,10 +11,15 @@
 ##
 ## AI-powered grep replacement that uses LLMs to search and replace code semantically.
 ##
-## ```
+## ```bash
 ## grepai init            # Initialize in your project
 ## grepai watch           # Start indexing daemon
 ## grepai search "query"  # Search with natural language
+## ```
+##
+## recommended ollama embedding provider
+## ```bash
+## ollama pull nomic-embed-text
 ## ```
 ##
 ## @category cli

@@ -11,6 +11,7 @@
 ##
 ## @category ai
 ## @link     https://ollama.com/download/linux
+## @link     https://ollama.com/library
 
 CURDIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 # shellcheck source=/dev/null

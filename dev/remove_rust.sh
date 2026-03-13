@@ -18,16 +18,17 @@ CURDIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 
 #--------------------------------------------------
 
-if [ ! -x "$(command -v curl)" ]; then
-    _echo_danger "error: \"$(basename "${0}")\" requires curl, try: 'sudo apt-get install -y curl'\n"
+_alert_danger 'Uninstall rust toolchain'
+
+#--------------------------------------------------
+
+if [ ! -x "$(command -v rustup)" ]; then
+    _echo_danger "error: \"$(basename "${0}")\" requires rustup, try: 'sudo apt-get install -y rustup'\n"
     exit 1
 fi
 
 #--------------------------------------------------
 
-_alert_danger 'Uninstall rust toolchain'
+_echo_info 'rustup self uninstall -y\n'
+rustup self uninstall -y
 
-#--------------------------------------------------
-
-_echo_info 'curl --proto '\''=https'\'' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --uninstall\n'
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --uninstall
