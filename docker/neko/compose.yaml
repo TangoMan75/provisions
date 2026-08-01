@@ -1,0 +1,36 @@
+---
+
+services:
+  neko:
+    image: m1k1o/neko:latest
+    container_name: neko
+    restart: unless-stopped
+    ports:
+      - "52000-52100:52000-52100/udp"
+    environment:
+      - NEKO_PASSWORD=toor
+      - NEKO_PASSWORD_ADMIN=root
+      - NEKO_EPR=52000-52100
+      - NEKO_NC=true
+    volumes:
+      - ./data:/home/neko/Downloads
+    shm_size: 2gb
+    networks:
+      - traefik
+    labels:
+      traefik.enable: true
+      traefik.http.services.neko.loadbalancer.server.port: 8080
+
+      # allow http trafic on local server
+      traefik.http.routers.neko-http.entrypoints: web
+      traefik.http.routers.neko-http.rule: Host(`neko.localhost`)
+
+      # https configuration
+      traefik.http.routers.neko-https.entrypoints: websecure
+      traefik.http.routers.neko-https.rule: Host(`neko.localhost`)
+      traefik.http.routers.neko-https.middlewares: security@file, compression@file
+      traefik.http.routers.neko-https.tls: true
+
+networks:
+  traefik:
+    external: true

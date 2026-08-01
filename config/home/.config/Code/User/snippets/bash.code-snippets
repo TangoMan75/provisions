@@ -1,0 +1,8 @@
+{
+  "Bash Variable Expansion": {
+    "prefix": "$",
+    "body": ["\"\\${${0}}\""],
+    "description": "Insert bash variable expansion",
+    "scope": "source.shell"
+  }
+}

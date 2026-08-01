@@ -1,0 +1,50 @@
+---
+
+services:
+  piwigo-main:
+    image: piwigo/piwigo:latest
+    restart: always
+    environment:
+      - TZ=${timezone}
+    networks:
+      - traefik
+    ports:
+      - ${piwigo_port}:80
+    depends_on:
+      - piwigo-db
+    volumes:
+      - ./data/piwigo:/var/www/html/piwigo/
+      - ./data/scripts:/usr/local/bin/scripts/
+
+  piwigo-db:
+    image: docker.io/library/mariadb:lts
+    restart: always
+    environment:
+      - MARIADB_RANDOM_ROOT_PASSWORD=true
+      - MARIADB_USER=piwigodb_user
+      - MARIADB_DATABASE=piwigodb
+      # Defined in .env
+      - MARIADB_PASSWORD=${db_user_password} 
+      - TZ=${timezone}
+    networks:
+      - traefik
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+
+    labels:
+      traefik.enable: true
+      traefik.http.services.piwigo.loadbalancer.server.port: 8080
+
+      # allow http trafic on local server
+      traefik.http.routers.piwigo-http.entrypoints: web
+      traefik.http.routers.piwigo-http.rule: Host(`piwigo.localhost`)
+
+      # https configuration
+      traefik.http.routers.piwigo-https.entrypoints: websecure
+      traefik.http.routers.piwigo-https.rule: Host(`piwigo.localhost`)
+      traefik.http.routers.piwigo-https.middlewares: security@file, compression@file
+      traefik.http.routers.piwigo-https.tls: true
+
+networks:
+  traefik:
+    external: true

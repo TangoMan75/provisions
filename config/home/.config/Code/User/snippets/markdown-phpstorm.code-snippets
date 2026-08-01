@@ -1,0 +1,8 @@
+{
+  "Markdown PhpStorm Link": {
+    "prefix": "storm",
+    "body": ["- [${1}](phpstorm://open?file=${2}&line=${0})"],
+    "description": "Insert a PhpStorm deep link",
+    "scope": "markdown"
+  }
+}

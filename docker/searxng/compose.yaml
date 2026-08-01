@@ -1,0 +1,28 @@
+---
+
+services:
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    volumes:
+      - ./data/:/var/cache/searxng/
+      - ./config/:/etc/searxng/
+    networks:
+      - traefik
+    labels:
+      traefik.enable: true
+      traefik.http.services.searxng.loadbalancer.server.port: 8080
+
+      # allow http trafic on local server
+      traefik.http.routers.searxng-http.entrypoints: web
+      traefik.http.routers.searxng-http.rule: Host(`searxng.localhost`)
+
+      # https configuration
+      traefik.http.routers.searxng-https.entrypoints: websecure
+      traefik.http.routers.searxng-https.rule: Host(`searxng.localhost`)
+      traefik.http.routers.searxng-https.middlewares: security@file, compression@file
+      traefik.http.routers.searxng-https.tls: true
+
+networks:
+  traefik:
+    external: true

@@ -1,0 +1,12 @@
+{
+  "Markdown YML Code Block": {
+    "prefix": "yml",
+    "body": [
+      "```yaml",
+      "${0}",
+      "```"
+    ],
+    "description": "Insert a YML code block",
+    "scope": "markdown"
+  }
+}
