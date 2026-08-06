@@ -11,10 +11,15 @@
 ##
 ## Google Workspace CLI — one command-line tool for Drive, Gmail, Calendar, Sheets, Docs, Chat, Admin, and more.
 ##
+## ## Authentication
+##
 ## ```
-## # Authenticate
+## # Interactive: walks you through Google Cloud project config and OAuth login
 ## gws auth setup
+## # Subsequent scope selection and login
 ## gws auth login
+## # Limit scopes when the OAuth app is unverified (testing mode allows ~25 scopes)
+## gws auth login -s drive,gmail,sheets
 ## ```
 ##
 ## @category cli
