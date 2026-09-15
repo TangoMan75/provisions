@@ -1,0 +1,12 @@
+{
+  "Markdown Shell Code Block": {
+    "prefix": "shell",
+    "body": [
+      "```shell",
+      "\\$ ${0}",
+      "```"
+    ],
+    "description": "Insert a shell code block with $ prompt",
+    "scope": "markdown"
+  }
+}

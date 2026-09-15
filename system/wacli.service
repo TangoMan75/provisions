@@ -1,0 +1,20 @@
+[Unit]
+Description=wacli — WhatsApp message sync (mirrors to local SQLite store)
+Documentation=https://github.com/openclaw/wacli
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=/home/tangoman75/.local/bin/wacli sync --follow
+Environment="PATH=/home/tangoman75/.local/bin:/usr/bin:/bin"
+Environment="WACLI_DEVICE_LABEL=wacli - %H"
+Restart=always
+RestartSec=10
+TimeoutStopSec=30
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
