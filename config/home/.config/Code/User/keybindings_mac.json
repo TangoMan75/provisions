@@ -1,0 +1,190 @@
+[
+    {
+        "key": "shift+alt+up",
+        "command": "-editor.action.insertCursorAbove",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "cmd+alt+up",
+        "command": "editor.action.insertCursorAbove",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "shift+alt+down",
+        "command": "-editor.action.insertCursorBelow",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "cmd+alt+down",
+        "command": "editor.action.insertCursorBelow",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "shift+alt+i",
+        "command": "-editor.action.insertCursorAtEndOfEachLineSelected",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "cmd+shift+l",
+        "command": "editor.action.insertCursorAtEndOfEachLineSelected",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "cmd+shift+p",
+        "command": "workbench.action.showCommands"
+    },
+    {
+        "key": "cmd+shift+d",
+        "command": "editor.action.copyLinesDownAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+shift+down",
+        "command": "-editor.action.insertCursorBelow",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "cmd+shift+down",
+        "command": "editor.action.moveLinesDownAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+shift+up",
+        "command": "-editor.action.insertCursorAbove",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "cmd+shift+up",
+        "command": "editor.action.moveLinesUpAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+shift+c",
+        "command": "-workbench.action.terminal.openNativeConsole",
+        "when": "terminalProcessSupported && !terminalFocus || terminalWebExtensionContributedProfile && !terminalFocus"
+    },
+    {
+        "key": "alt+z",
+        "command": "-editor.action.toggleWordWrap"
+    },
+    {
+        "key": "cmd+shift+w",
+        "command": "editor.action.toggleWordWrap"
+    },
+    {
+        "key": "cmd+delete",
+        "command": "deleteAllRight",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+alt+left",
+        "command": "workbench.action.navigateBack",
+        "when": "canNavigateBack"
+    },
+    {
+        "key": "cmd+alt+right",
+        "command": "workbench.action.navigateForward",
+        "when": "canNavigateForward"
+    },
+    {
+        "key": "cmd+alt+l",
+        "command": "editor.action.formatDocument",
+        "when": "editorHasDocumentFormattingProvider && editorTextFocus && !editorReadonly && !inCompositeEditor"
+    },
+    {
+        "key": "f9",
+        "command": "editor.action.sortLinesAscending",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+shift+t",
+        "command": "workbench.action.terminal.newWithCwd",
+        "args": {
+            "cwd": "${fileDirname}"
+        }
+    },
+    {
+        "key": "cmd+e",
+        "command": "revealFileInOS"
+    },
+    {
+        "key": "cmd+k cmd+c",
+        "command": "-editor.action.addCommentLine",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+k cmd+c",
+        "command": "extension.changeCase.camel",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+k cmd+t",
+        "command": "-workbench.action.selectTheme"
+    },
+    {
+        "key": "cmd+k cmd+t",
+        "command": "command-cycle.loop",
+        "args": {
+            "commands": [
+                "extension.changeCase.sentence",
+                "extension.changeCase.title",
+                "extension.changeCase.camel",
+                "extension.changeCase.pascal",
+                "extension.changeCase.no"
+            ]
+        },
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+k cmd+l",
+        "command": "-editor.toggleFold",
+        "when": "editorTextFocus && foldingEnabled"
+    },
+    {
+        "key": "cmd+k cmd+l",
+        "command": "command-cycle.loop",
+        "args": {
+            "commands": [
+                "extension.changeCase.kebab",
+                "extension.changeCase.snake",
+                "extension.changeCase.lower",
+                "extension.changeCase.no"
+            ]
+        },
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+k cmd+u",
+        "command": "-editor.action.removeCommentLine",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+k cmd+u",
+        "command": "command-cycle.loop",
+        "args": {
+            "commands": [
+                "extension.changeCase.upper",
+                "extension.changeCase.constant",
+                "extension.changeCase.kebab",
+                "extension.changeCase.upper",
+                "extension.changeCase.no"
+            ]
+        },
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+alt+n",
+        "command": "extension.textPastry.range",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+alt+enter",
+        "command": "-editor.action.replaceAll",
+        "when": "editorFocus && findWidgetVisible"
+    },
+    {
+        "key": "cmd+alt+enter",
+        "command": "blankLine.process",
+        "when": "editorTextFocus && !editorReadonly"
+    }
+]

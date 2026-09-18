@@ -1,0 +1,47 @@
+---
+
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web console
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minio123}
+      MINIO_SERVER_URL: ${MINIO_SERVER_URL:-http://localhost:9000}
+    command: server /data --console-address ":9001"
+    volumes:
+      - ./data:/data
+    networks:
+      - traefik
+    labels:
+      traefik.enable: true
+
+      # --- S3 API ---
+      traefik.http.routers.minio-s3.entrypoints: websecure
+      traefik.http.routers.minio-s3.rule: Host(`s3.minio.localhost`)
+      traefik.http.routers.minio-s3.middlewares: security@file, compression@file
+      traefik.http.routers.minio-s3.tls: true
+      traefik.http.routers.minio-s3.service: minio-s3
+      traefik.http.services.minio-s3.loadbalancer.server.port: 9000
+
+      # --- Console ---
+      # allow http trafic on local server
+      traefik.http.routers.minio-http.entrypoints: web
+      traefik.http.routers.minio-http.rule: Host(`minio.localhost`)
+      traefik.http.routers.minio-http.service: minio-http
+      traefik.http.services.minio-http.loadbalancer.server.port: 9001
+      # https configuration
+      traefik.http.routers.minio-https.entrypoints: websecure
+      traefik.http.routers.minio-https.rule: Host(`minio.localhost`)
+      traefik.http.routers.minio-https.middlewares: security@file, compression@file
+      traefik.http.routers.minio-https.tls: true
+      traefik.http.routers.minio-https.service: minio-https
+      traefik.http.services.minio-https.loadbalancer.server.port: 9001
+
+networks:
+  traefik:
+    external: true

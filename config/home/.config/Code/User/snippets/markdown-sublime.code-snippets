@@ -1,0 +1,8 @@
+{
+  "Markdown Sublime Link": {
+    "prefix": "subl",
+    "body": ["- [${1}](sublime://open?file=${2}&line=${0})"],
+    "description": "Insert a Sublime Text deep link",
+    "scope": "markdown"
+  }
+}

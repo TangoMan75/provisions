@@ -1,0 +1,13 @@
+{
+  "Python Shebang": {
+    "prefix": "!",
+    "body": [
+      "#!/bin/python3",
+      "# -*- coding: utf-8 -*-",
+      "",
+      "${0}"
+    ],
+    "description": "Insert Python shebang",
+    "scope": "source.python"
+  }
+}

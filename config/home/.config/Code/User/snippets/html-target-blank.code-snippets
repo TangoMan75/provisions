@@ -1,0 +1,8 @@
+{
+  "HTML Target Blank": {
+    "prefix": "target",
+    "body": ["target=\"_blank\" rel=\"noopener noreferrer nofollow\""],
+    "description": "Insert target=_blank with security attributes",
+    "scope": "text.html"
+  }
+}
