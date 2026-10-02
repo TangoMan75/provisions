@@ -1,0 +1,12 @@
+{
+  "Markdown Python Code Block": {
+    "prefix": "python",
+    "body": [
+      "```python",
+      "${0}",
+      "```"
+    ],
+    "description": "Insert a Python code block",
+    "scope": "markdown"
+  }
+}

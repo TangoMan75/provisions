@@ -1,0 +1,36 @@
+---
+
+services:
+  convertx:
+    image: ghcr.io/c4illin/convertx:latest
+    container_name: convertx
+    restart: unless-stopped
+    ports:
+      - ${convertx_port}:3000
+    environment:
+      - ACCOUNT_REGISTRATION=${ACCOUNT_REGISTRATION:-false}
+      - JWT_SECRET=${JWT_SECRET}
+      - HTTP_ALLOWED=${HTTP_ALLOWED:-true}
+      - ALLOW_UNAUTHENTICATED=${ALLOW_UNAUTHENTICATED:-false}
+      - AUTO_DELETE_EVERY_N_HOURS=${AUTO_DELETE_EVERY_N_HOURS:-24}
+    volumes:
+      - ./data:/app/data
+    networks:
+      - traefik
+    labels:
+      traefik.enable: true
+      traefik.http.services.convertx.loadbalancer.server.port: 3000
+
+      # allow http traffic on local server
+      traefik.http.routers.convertx-http.entrypoints: web
+      traefik.http.routers.convertx-http.rule: Host(`convertx.localhost`)
+
+      # https configuration
+      traefik.http.routers.convertx-https.entrypoints: websecure
+      traefik.http.routers.convertx-https.rule: Host(`convertx.localhost`)
+      traefik.http.routers.convertx-https.middlewares: security@file, compression@file
+      traefik.http.routers.convertx-https.tls: true
+
+networks:
+  traefik:
+    external: true
