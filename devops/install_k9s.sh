@@ -30,6 +30,11 @@ install_k9s() {
         exit 1
     fi
 
+    if [ ! -x "$(command -v gpg)" ]; then
+        _echo_danger "error: \"$(basename "${0}")\" requires gpg, try: 'sudo apt-get install -y gpg'\n"
+        exit 1
+    fi
+
     # Check gcloud installation
     if [ ! -x "$(command -v gcloud)" ]; then
         _echo_danger "error: \"$(basename "${0}")\" requires gcloud, try: 'sudo apt-get install -y google-cloud-sdk'\n"
@@ -54,20 +59,20 @@ install_k9s() {
         _echo_info 'sudo apt-get install --assume-yes ca-certificates gnupg\n'
         sudo apt-get install --assume-yes ca-certificates gnupg
 
+        if [ ! -f /usr/share/keyrings/cloud.google.gpg ]; then
+            # Install key in a dedicated keyring (apt-key is gone since Debian 12 / Ubuntu 24.04)
+            _echo_info 'curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/cloud.google.gpg\n'
+            curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/cloud.google.gpg
+        fi
+
         if [ ! -f /etc/apt/sources.list.d/google-cloud-sdk.list ]; then
             # Install repository
             _echo_info 'echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list\n'
             echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-
-            _echo_info 'sudo apt-get update\n'
-            sudo apt-get update
         fi
 
-        if [ ! -f /usr/share/keyrings/cloud.google.gpg ]; then
-            # Install key
-            _echo_info 'curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -\n'
-            curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-        fi
+        _echo_info 'sudo apt-get update\n'
+        sudo apt-get update
 
         _echo_info 'sudo apt-get install --assume-yes kubectl\n'
         sudo apt-get install --assume-yes kubectl

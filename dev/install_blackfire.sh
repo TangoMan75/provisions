@@ -24,11 +24,27 @@ if [ ! -x "$(command -v wget)" ]; then
     exit 1
 fi
 
-_echo_info 'wget -qO - https://packagecloud.io/gpg.key | sudo apt-key add -\n'
-wget -qO - https://packagecloud.io/gpg.key | sudo apt-key add -
+if [ ! -x "$(command -v gpg)" ]; then
+    _echo_danger "error: \"$(basename "${0}")\" requires gpg, try: 'sudo apt-get install -y gpg'\n"
+    exit 1
+fi
 
-_echo_info 'echo "deb http://packages.blackfire.io/debian any main" | sudo tee /etc/apt/sources.list.d/blackfire.list\n'
-echo "deb http://packages.blackfire.io/debian any main" | sudo tee /etc/apt/sources.list.d/blackfire.list
+#--------------------------------------------------
+
+KEYRING_URL=https://packagecloud.io/gpg.key
+KEYRING=blackfire.gpg
+
+#--------------------------------------------------
+
+_echo_info 'sudo mkdir -p -m 755 /etc/apt/keyrings\n'
+sudo mkdir -p -m 755 /etc/apt/keyrings
+
+# install the gpg key in a dedicated keyring (apt-key is gone since Debian 12 / Ubuntu 24.04)
+_echo_info "wget -qO- \"${KEYRING_URL}\" | sudo gpg --batch --yes --dearmor -o \"/etc/apt/keyrings/${KEYRING}\"\n"
+wget -qO- "${KEYRING_URL}" | sudo gpg --batch --yes --dearmor -o "/etc/apt/keyrings/${KEYRING}"
+
+_echo_info "echo \"deb [signed-by=/etc/apt/keyrings/${KEYRING}] http://packages.blackfire.io/debian any main\" | sudo tee /etc/apt/sources.list.d/blackfire.list > /dev/null\n"
+echo "deb [signed-by=/etc/apt/keyrings/${KEYRING}] http://packages.blackfire.io/debian any main" | sudo tee /etc/apt/sources.list.d/blackfire.list > /dev/null
 
 _echo_info 'sudo apt-get update\n'
 sudo apt-get update

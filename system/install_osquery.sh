@@ -20,11 +20,33 @@ CURDIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 
 #--------------------------------------------------
 
-_echo_info 'sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1484120AC4E9F8A1A577AEEE97A80C63C9D8B80B\n'
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1484120AC4E9F8A1A577AEEE97A80C63C9D8B80B
+KEY_ID=1484120AC4E9F8A1A577AEEE97A80C63C9D8B80B
+KEYRING=osquery.gpg
 
-_echo_info "sudo add-apt-repository 'deb [arch=amd64] https://pkg.osquery.io/deb deb main'\n"
-sudo add-apt-repository 'deb [arch=amd64] https://pkg.osquery.io/deb deb main'
+#--------------------------------------------------
+
+if [ ! -x "$(command -v gpg)" ]; then
+    _echo_danger "error: \"$(basename "${0}")\" requires gpg, try: 'sudo apt-get install -y gpg'\n"
+    exit 1
+fi
+
+# fetch the key in a temporary keyring (apt-key is gone since Debian 12 / Ubuntu 24.04)
+TEMP_GNUPGHOME=$(mktemp -d)
+
+_echo_info 'sudo mkdir -p -m 755 /etc/apt/keyrings\n'
+sudo mkdir -p -m 755 /etc/apt/keyrings
+
+_echo_info "gpg --batch --homedir \"${TEMP_GNUPGHOME}\" --keyserver keyserver.ubuntu.com --recv-keys ${KEY_ID}\n"
+gpg --batch --homedir "${TEMP_GNUPGHOME}" --keyserver keyserver.ubuntu.com --recv-keys "${KEY_ID}"
+
+_echo_info "gpg --batch --homedir \"${TEMP_GNUPGHOME}\" --export ${KEY_ID} | sudo tee \"/etc/apt/keyrings/${KEYRING}\" > /dev/null\n"
+gpg --batch --homedir "${TEMP_GNUPGHOME}" --export "${KEY_ID}" | sudo tee "/etc/apt/keyrings/${KEYRING}" > /dev/null
+
+_echo_info "rm -rf \"${TEMP_GNUPGHOME}\"\n"
+rm -rf "${TEMP_GNUPGHOME}"
+
+_echo_info "echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/${KEYRING}] https://pkg.osquery.io/deb deb main\" | sudo tee /etc/apt/sources.list.d/osquery.list > /dev/null\n"
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/${KEYRING}] https://pkg.osquery.io/deb deb main" | sudo tee /etc/apt/sources.list.d/osquery.list > /dev/null
 
 _echo_info 'sudo apt-get update\n'
 sudo apt-get update

@@ -141,7 +141,7 @@ requirements() {
         _error=1
     fi
 
-    if [ ! "$(docker compose >/dev/null 2>&1)" ] && [ ! -x "$(command -v docker-compose)" ]; then
+    if ! docker compose >/dev/null 2>&1 && [ ! -x "$(command -v docker-compose)" ]; then
         _echo_error "\"$(basename "${0}")\" requires docker-compose or docker compose plugin\n"
         _error=1
     fi
@@ -1202,7 +1202,7 @@ _docker_compose_stop() {
 _get_docker_compose() {
     # Synopsis: _get_docker_compose
 
-    if [ "$(docker compose >/dev/null 2>&1)" ]; then
+    if docker compose >/dev/null 2>&1; then
         echo 'docker compose'
 
         return 0

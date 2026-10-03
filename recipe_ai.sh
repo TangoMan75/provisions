@@ -34,7 +34,7 @@ if [ "${UPDATE}" = true ]; then
     sudo apt-get update
 fi
 
-./ai/install_gemini-cli.sh
+./ai/install_antigravity-cli.sh
 
 ./ai/install_opencode.sh
 ./ai/install_opencode_telegram-bot.sh

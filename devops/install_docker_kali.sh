@@ -24,15 +24,28 @@ if [ ! -x "$(command -v curl)" ]; then
     exit 1
 fi
 
+if [ ! -x "$(command -v gpg)" ]; then
+    _echo_danger "error: \"$(basename "${0}")\" requires gpg, try: 'sudo apt-get install -y gpg'\n"
+    exit 1
+fi
+
+#--------------------------------------------------
+
+KEYRING_URL=https://download.docker.com/linux/debian/gpg
+KEYRING=docker.gpg
+
+#--------------------------------------------------
+
 # add docker's official gpg key
-_echo_info 'curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -\n'
-curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+_echo_info 'sudo mkdir -p -m 755 /etc/apt/keyrings\n'
+sudo mkdir -p -m 755 /etc/apt/keyrings
+
+_echo_info "curl -fsSL \"${KEYRING_URL}\" | sudo gpg --batch --yes --dearmor -o \"/etc/apt/keyrings/${KEYRING}\"\n"
+curl -fsSL "${KEYRING_URL}" | sudo gpg --batch --yes --dearmor -o "/etc/apt/keyrings/${KEYRING}"
 
 # set up stable repository
-_echo_info "sudo add-apt-repository --yes \"deb [arch=amd64] https://download.docker.com/linux/debian buster stable\"\n"
-sudo add-apt-repository --yes "deb [arch=amd64] https://download.docker.com/linux/debian buster stable"
-
-# echo 'deb [arch=amd64] https://download.docker.com/linux/debian buster stable' | sudo tee /etc/apt/sources.list.d/docker.list
+_echo_info "echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/${KEYRING}] https://download.docker.com/linux/debian buster stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null\n"
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/${KEYRING}] https://download.docker.com/linux/debian buster stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 # update the apt package index
 _echo_info 'sudo apt-get update\n'

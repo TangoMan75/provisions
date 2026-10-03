@@ -23,6 +23,13 @@ _alert_danger 'Uninstall sublime-text'
 _echo_info 'sudo apt-get remove --assume-yes sublime-text\n'
 sudo apt-get remove --assume-yes sublime-text
 
+# remove apt repository and keyring
+_echo_info 'sudo rm -f /etc/apt/sources.list.d/sublime-text.list\n'
+sudo rm -f /etc/apt/sources.list.d/sublime-text.list
+
+_echo_info 'sudo rm -f /etc/apt/keyrings/sublimehq-pub.gpg\n'
+sudo rm -f /etc/apt/keyrings/sublimehq-pub.gpg
+
 # remove config
 _echo_info 'rm -rf ~/.config/sublime-text-3\n'
 rm -rf ~/.config/sublime-text-3

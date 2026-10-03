@@ -27,17 +27,33 @@ if [ ! -x "$(command -v wget)" ]; then
     exit 1
 fi
 
+if [ ! -x "$(command -v gpg)" ]; then
+    _echo_danger "error: \"$(basename "${0}")\" requires gpg, try: 'sudo apt-get install -y gpg'\n"
+    exit 1
+fi
+
+#--------------------------------------------------
+
+KEYRING_URL=https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
+KEYRING=cuda-ubuntu2004.gpg
+
+#--------------------------------------------------
+
 _echo_info 'wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin\n'
 wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
 
 _echo_info 'sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600\n'
 sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
 
-_echo_info 'sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub\n'
-sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
+# install the gpg key in a dedicated keyring (apt-key is gone since Debian 12 / Ubuntu 24.04)
+_echo_info 'sudo mkdir -p -m 755 /etc/apt/keyrings\n'
+sudo mkdir -p -m 755 /etc/apt/keyrings
 
-_echo_info 'sudo add-apt-repository --yes "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"\n'
-sudo add-apt-repository --yes "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
+_echo_info "wget -q \"${KEYRING_URL}\" -O- | sudo gpg --batch --yes --dearmor -o \"/etc/apt/keyrings/${KEYRING}\"\n"
+wget -q "${KEYRING_URL}" -O- | sudo gpg --batch --yes --dearmor -o "/etc/apt/keyrings/${KEYRING}"
+
+_echo_info "echo \"deb [signed-by=/etc/apt/keyrings/${KEYRING}] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /\" | sudo tee /etc/apt/sources.list.d/cuda-ubuntu2004.list > /dev/null\n"
+echo "deb [signed-by=/etc/apt/keyrings/${KEYRING}] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /" | sudo tee /etc/apt/sources.list.d/cuda-ubuntu2004.list > /dev/null
 
 _echo_info 'sudo apt-get update\n'
 sudo apt-get update

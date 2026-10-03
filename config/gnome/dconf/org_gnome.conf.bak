@@ -94,8 +94,8 @@ name='gnome-characters'
 
 [settings-daemon/plugins/media-keys/custom-keybindings/custom1]
 binding='<Primary><Alt>t'
-command='bash -c "xdg-terminal-exec --dir=$(xdg-user-dir DOCUMENTS)"'
-name='open "Documents" folder in default terminal'
+command='bash -c "gnome-terminal --working-directory=$(xdg-user-dir DOCUMENTS)"'
+name='gnome-terminal to Documents folder'
 
 [settings-daemon/plugins/media-keys/custom-keybindings/custom2]
 binding='<Primary><shift><Alt>t'

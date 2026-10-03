@@ -27,6 +27,8 @@ CURDIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 #--------------------------------------------------
 
 APP_NAME=code
+# DESKTOP is only referenced by the commented-out desktop shortcut below
+# shellcheck disable=SC2034
 DESKTOP=code_code.desktop
 
 _alert_primary "Install ${APP_NAME}"
@@ -46,6 +48,6 @@ sudo snap install "${APP_NAME}" --classic
 #--------------------------------------------------
 
 # create desktop shortcut
-_echo_info "ln -s \"/var/lib/snapd/desktop/applications/${DESKTOP}\" \"$(xdg-user-dir DESKTOP)\"\n"
-ln -s "/var/lib/snapd/desktop/applications/${DESKTOP}" "$(xdg-user-dir DESKTOP)"
+# _echo_info "ln -s \"/var/lib/snapd/desktop/applications/${DESKTOP}\" \"$(xdg-user-dir DESKTOP)\"\n"
+# ln -s "/var/lib/snapd/desktop/applications/${DESKTOP}" "$(xdg-user-dir DESKTOP)"
 

@@ -68,11 +68,32 @@ _alert_primary "Install VirtualBox ${VERSION}"
 
 #--------------------------------------------------
 
-_echo_info "sudo add-apt-repository --yes \"deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib\"\n"
-sudo add-apt-repository --yes "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib"
+if [ ! -x "$(command -v wget)" ]; then
+    _echo_danger "error: \"$(basename "${0}")\" requires wget, try: 'sudo apt-get install -y wget'\n"
+    exit 1
+fi
 
-_echo_info 'wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -\n'
-wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
+if [ ! -x "$(command -v gpg)" ]; then
+    _echo_danger "error: \"$(basename "${0}")\" requires gpg, try: 'sudo apt-get install -y gpg'\n"
+    exit 1
+fi
+
+#--------------------------------------------------
+
+KEYRING_URL=https://www.virtualbox.org/download/oracle_vbox_2016.asc
+KEYRING=oracle_vbox_2016.gpg
+
+#--------------------------------------------------
+
+_echo_info 'sudo mkdir -p -m 755 /etc/apt/keyrings\n'
+sudo mkdir -p -m 755 /etc/apt/keyrings
+
+# install the gpg key in a dedicated keyring (apt-key is gone since Debian 12 / Ubuntu 24.04)
+_echo_info "wget -q \"${KEYRING_URL}\" -O- | sudo gpg --batch --yes --dearmor -o \"/etc/apt/keyrings/${KEYRING}\"\n"
+wget -q "${KEYRING_URL}" -O- | sudo gpg --batch --yes --dearmor -o "/etc/apt/keyrings/${KEYRING}"
+
+_echo_info "echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/${KEYRING}] https://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib\" | sudo tee /etc/apt/sources.list.d/virtualbox.list > /dev/null\n"
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/${KEYRING}] https://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list > /dev/null
 
 #--------------------------------------------------
 

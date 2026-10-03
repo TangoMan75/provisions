@@ -25,11 +25,27 @@ if [ ! -x "$(command -v wget)" ]; then
     exit 1
 fi
 
-_echo_info 'sudo sh -c echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list\n'
-sudo sh -c 'echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
+if [ ! -x "$(command -v gpg)" ]; then
+    _echo_danger "error: \"$(basename "${0}")\" requires gpg, try: 'sudo apt-get install -y gpg'\n"
+    exit 1
+fi
 
-_echo_info 'wget -qO - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -\n'
-wget -qO - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+#--------------------------------------------------
+
+KEYRING_URL=https://dl-ssl.google.com/linux/linux_signing_key.pub
+KEYRING=google-chrome.gpg
+
+#--------------------------------------------------
+
+_echo_info 'sudo mkdir -p -m 755 /etc/apt/keyrings\n'
+sudo mkdir -p -m 755 /etc/apt/keyrings
+
+# install the gpg key in a dedicated keyring (apt-key is gone since Debian 12 / Ubuntu 24.04)
+_echo_info "wget -qO- \"${KEYRING_URL}\" | sudo gpg --batch --yes --dearmor -o \"/etc/apt/keyrings/${KEYRING}\"\n"
+wget -qO- "${KEYRING_URL}" | sudo gpg --batch --yes --dearmor -o "/etc/apt/keyrings/${KEYRING}"
+
+_echo_info "echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/${KEYRING}] https://dl.google.com/linux/chrome/deb/ stable main\" | sudo tee /etc/apt/sources.list.d/google-chrome.list > /dev/null\n"
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/${KEYRING}] https://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list > /dev/null
 
 _echo_info 'sudo apt-get update\n'
 sudo apt-get update

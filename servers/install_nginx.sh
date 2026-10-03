@@ -23,18 +23,28 @@ if [ ! -x "$(command -v wget)" ]; then
     exit 1
 fi
 
-_echo_info 'wget http://nginx.org/keys/nginx_signing.key\n'
-wget http://nginx.org/keys/nginx_signing.key
+if [ ! -x "$(command -v gpg)" ]; then
+    _echo_danger "error: \"$(basename "${0}")\" requires gpg, try: 'sudo apt-get install -y gpg'\n"
+    exit 1
+fi
 
-_echo_info 'sudo apt-key add nginx_signing.key\n'
-sudo apt-key add nginx_signing.key
+#--------------------------------------------------
 
-_echo_info 'rm -f nginx_signing.key\n'
-rm -f nginx_signing.key
+KEYRING_URL=http://nginx.org/keys/nginx_signing.key
+KEYRING=nginx_signing.gpg
+
+#--------------------------------------------------
+
+# install the gpg key in a dedicated keyring (apt-key is gone since Debian 12 / Ubuntu 24.04)
+_echo_info 'sudo mkdir -p -m 755 /etc/apt/keyrings\n'
+sudo mkdir -p -m 755 /etc/apt/keyrings
+
+_echo_info "wget -qO- \"${KEYRING_URL}\" | sudo gpg --batch --yes --dearmor -o \"/etc/apt/keyrings/${KEYRING}\"\n"
+wget -qO- "${KEYRING_URL}" | sudo gpg --batch --yes --dearmor -o "/etc/apt/keyrings/${KEYRING}"
 
 # add repository
-_echo_info "sudo add-apt-repository --yes -u \"deb http://nginx.org/packages/ubuntu/ $(lsb_release -cs) nginx\"\n"
-sudo add-apt-repository --yes -u "deb http://nginx.org/packages/ubuntu/ $(lsb_release -cs) nginx"
+_echo_info "echo \"deb [signed-by=/etc/apt/keyrings/${KEYRING}] http://nginx.org/packages/ubuntu/ $(lsb_release -cs) nginx\" | sudo tee /etc/apt/sources.list.d/nginx.list > /dev/null\n"
+echo "deb [signed-by=/etc/apt/keyrings/${KEYRING}] http://nginx.org/packages/ubuntu/ $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list > /dev/null
 
 # update nginx ppa
 _echo_info 'sudo add-apt-repository --yes ppa:ondrej/nginx\n'
@@ -43,8 +53,8 @@ sudo add-apt-repository --yes ppa:ondrej/nginx
 _echo_info 'sudo apt-get update\n'
 sudo apt-get update
 
-_echo_info 'sudo apt-get install --assume-yes --allow-unauthenticated nginx\n'
-sudo apt-get install --assume-yes --allow-unauthenticated nginx
+_echo_info 'sudo apt-get install --assume-yes nginx\n'
+sudo apt-get install --assume-yes nginx
 
 # # add www-data to nginx group
 # _echo_info 'sudo usermod -aG www-data nginx\n'

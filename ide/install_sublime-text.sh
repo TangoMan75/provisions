@@ -33,26 +33,38 @@ if [ ! -x "$(command -v wget)" ]; then
     exit 1
 fi
 
-# install the gpg key
-# TODO: Warning: apt-key is deprecated. Manage keyring files in trusted.gpg.d instead (see apt-key(8)).
-_echo_info 'wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -\n'
-wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+if [ ! -x "$(command -v gpg)" ]; then
+    _echo_danger "error: \"$(basename "${0}")\" requires gpg, try: 'sudo apt-get install -y gpg'\n"
+    exit 1
+fi
+
+#--------------------------------------------------
+
+KEYRING_URL=https://download.sublimetext.com/sublimehq-pub.gpg
+KEYRING=sublimehq-pub.gpg
+
+#--------------------------------------------------
 
 # ensure apt is set up to work with https sources:
-_echo_info 'sudo apt-get install apt-transport-https\n'
-sudo apt-get install apt-transport-https
+_echo_info 'sudo apt-get install --assume-yes apt-transport-https\n'
+sudo apt-get install --assume-yes apt-transport-https
+
+#--------------------------------------------------
+
+_echo_info 'sudo mkdir -p -m 755 /etc/apt/keyrings\n'
+sudo mkdir -p -m 755 /etc/apt/keyrings
+
+# install the gpg key in a dedicated keyring (apt-key is gone since Debian 12 / Ubuntu 24.04)
+_echo_info "wget -qO- \"${KEYRING_URL}\" | sudo gpg --batch --yes --dearmor -o \"/etc/apt/keyrings/${KEYRING}\"\n"
+wget -qO- "${KEYRING_URL}" | sudo gpg --batch --yes --dearmor -o "/etc/apt/keyrings/${KEYRING}"
 
 # stable channel
-# sudo add-apt-repository --yes -u 'https://download.sublimetext.com/ apt/stable'
-_echo_info 'echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list\n'
-echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
+_echo_info "echo \"deb [signed-by=/etc/apt/keyrings/${KEYRING}] https://download.sublimetext.com/ apt/stable/\" | sudo tee /etc/apt/sources.list.d/sublime-text.list > /dev/null\n"
+echo "deb [signed-by=/etc/apt/keyrings/${KEYRING}] https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list > /dev/null
 
 # update apt sources
 _echo_info 'sudo apt-get update\n'
 sudo apt-get update
-
-_echo_info 'sudo apt-get install --assume-yes apt-transport-https\n'
-sudo apt-get install --assume-yes apt-transport-https
 
 _echo_info 'sudo apt-get install --assume-yes sublime-text\n'
 sudo apt-get install --assume-yes sublime-text

@@ -66,21 +66,6 @@ test_check_major_version_should_return_greater_than() {
 }
 
 test_check_minor_version_should_return_lower_than() {
-    # shellcheck disable=SC2317
-    assert_equals '<' "$(compare_versions 2.0.0 2.1.0)"
-}
-
-test_check_minor_version_should_return_greater_than() {
-    # shellcheck disable=SC2317
-    assert_equals '>' "$(compare_versions 2.1.0 2.0.0)"
-}
-
-test_check_minor_version_should_return_greater_than_alt() {
-    # shellcheck disable=SC2317
-    assert_equals '>' "$(compare_versions 2.1.0 2.0.1)"
-}
-
-test_check_minor_version_should_return_lower_than() {
     assert_equals '<' "$(compare_versions 2.0.0 2.1.0)"
 }
 

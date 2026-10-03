@@ -17,16 +17,42 @@ CURDIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 
 #--------------------------------------------------
 
+if [ ! -x "$(command -v gpg)" ]; then
+    _echo_danger "error: \"$(basename "${0}")\" requires gpg, try: 'sudo apt-get install -y gpg'\n"
+    exit 1
+fi
+
+#--------------------------------------------------
+
+KEY_ID=F9FDA6BED73CDC22
+KEYRING=dell-somerville.gpg
+
+#--------------------------------------------------
+
+_echo_info 'sudo mkdir -p -m 755 /etc/apt/keyrings\n'
+sudo mkdir -p -m 755 /etc/apt/keyrings
+
+# fetch the key in a temporary keyring (apt-key is gone since Debian 12 / Ubuntu 24.04)
+TEMP_GNUPGHOME=$(mktemp -d)
+
+_echo_info "gpg --batch --homedir \"${TEMP_GNUPGHOME}\" --keyserver keyserver.ubuntu.com --recv-keys ${KEY_ID}\n"
+gpg --batch --homedir "${TEMP_GNUPGHOME}" --keyserver keyserver.ubuntu.com --recv-keys "${KEY_ID}"
+
+_echo_info "gpg --batch --homedir \"${TEMP_GNUPGHOME}\" --export ${KEY_ID} | sudo tee \"/etc/apt/keyrings/${KEYRING}\" > /dev/null\n"
+gpg --batch --homedir "${TEMP_GNUPGHOME}" --export "${KEY_ID}" | sudo tee "/etc/apt/keyrings/${KEYRING}" > /dev/null
+
+_echo_info "rm -rf \"${TEMP_GNUPGHOME}\"\n"
+rm -rf "${TEMP_GNUPGHOME}"
+
+#--------------------------------------------------
+
 _echo_info "sudo sh -c \"cat > /etc/apt/sources.list.d/$(lsb_release -cs 2>/dev/null)-dell.list << EOF\"\n"
 sudo sh -c "cat > /etc/apt/sources.list.d/$(lsb_release -cs 2>/dev/null)-dell.list << EOF
-deb http://dell.archive.canonical.com/updates/ $(lsb_release -cs 2>/dev/null)-dell public
-deb http://dell.archive.canonical.com/updates/ $(lsb_release -cs 2>/dev/null)-oem public
-deb http://dell.archive.canonical.com/updates/ $(lsb_release -cs 2>/dev/null)-somerville public
-deb http://dell.archive.canonical.com/updates/ $(lsb_release -cs 2>/dev/null)-somerville-melisa public
+deb [signed-by=/etc/apt/keyrings/${KEYRING}] http://dell.archive.canonical.com/updates/ $(lsb_release -cs 2>/dev/null)-dell public
+deb [signed-by=/etc/apt/keyrings/${KEYRING}] http://dell.archive.canonical.com/updates/ $(lsb_release -cs 2>/dev/null)-oem public
+deb [signed-by=/etc/apt/keyrings/${KEYRING}] http://dell.archive.canonical.com/updates/ $(lsb_release -cs 2>/dev/null)-somerville public
+deb [signed-by=/etc/apt/keyrings/${KEYRING}] http://dell.archive.canonical.com/updates/ $(lsb_release -cs 2>/dev/null)-somerville-melisa public
 EOF"
-
-_echo_info 'sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F9FDA6BED73CDC22\n'
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F9FDA6BED73CDC22
 
 _echo_info 'sudo apt update -qq\n'
 sudo apt update -qq

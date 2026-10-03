@@ -20,11 +20,35 @@ CURDIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 
 #--------------------------------------------------
 
-_echo_info 'curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -\n'
-curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+if [ ! -x "$(command -v curl)" ]; then
+    _echo_danger "error: \"$(basename "${0}")\" requires curl, try: 'sudo apt-get install -y curl'\n"
+    exit 1
+fi
 
-_echo_info "sudo apt-add-repository \"deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main\"\n"
-sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+if [ ! -x "$(command -v gpg)" ]; then
+    _echo_danger "error: \"$(basename "${0}")\" requires gpg, try: 'sudo apt-get install -y gpg'\n"
+    exit 1
+fi
 
-_echo_info 'sudo apt-get install --asssume-yes packer\n'
-sudo apt-get install --asssume-yes packer
+#--------------------------------------------------
+
+KEYRING_URL=https://apt.releases.hashicorp.com/gpg
+KEYRING=hashicorp.gpg
+
+#--------------------------------------------------
+
+_echo_info 'sudo mkdir -p -m 755 /etc/apt/keyrings\n'
+sudo mkdir -p -m 755 /etc/apt/keyrings
+
+# install the gpg key in a dedicated keyring (apt-key is gone since Debian 12 / Ubuntu 24.04)
+_echo_info "curl -fsSL \"${KEYRING_URL}\" | sudo gpg --batch --yes --dearmor -o \"/etc/apt/keyrings/${KEYRING}\"\n"
+curl -fsSL "${KEYRING_URL}" | sudo gpg --batch --yes --dearmor -o "/etc/apt/keyrings/${KEYRING}"
+
+_echo_info "echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/${KEYRING}] https://apt.releases.hashicorp.com $(lsb_release -cs) main\" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null\n"
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/${KEYRING}] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null
+
+_echo_info 'sudo apt-get update\n'
+sudo apt-get update
+
+_echo_info 'sudo apt-get install --assume-yes packer\n'
+sudo apt-get install --assume-yes packer
