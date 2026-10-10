@@ -1,0 +1,14 @@
+{
+  "Markdown Twig Code Block": {
+    "prefix": "twig",
+    "body": [
+      "```twig",
+      "{% block ${1} %}",
+      "    {{ ${2} }}",
+      "{% end block %}",
+      "```"
+    ],
+    "description": "Insert a Twig code block",
+    "scope": "markdown"
+  }
+}
