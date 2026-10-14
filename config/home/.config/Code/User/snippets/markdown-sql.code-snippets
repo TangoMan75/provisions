@@ -1,0 +1,12 @@
+{
+  "Markdown SQL Code Block": {
+    "prefix": "sql",
+    "body": [
+      "```sql",
+      "${0}",
+      "```"
+    ],
+    "description": "Insert a SQL code block",
+    "scope": "markdown"
+  }
+}

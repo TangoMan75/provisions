@@ -1,0 +1,50 @@
+---
+
+services:
+  imgproxy:
+    image: darthsim/imgproxy:latest
+    container_name: imgproxy
+    restart: unless-stopped
+
+    environment:
+      # Core settings
+      IMGPROXY_BIND: ":8080"
+      IMGPROXY_LOG_LEVEL: info
+
+      # Security: ALWAYS use a strong key pair
+      IMGPROXY_KEY: ${IMGPROXY_KEY}
+      IMGPROXY_SALT: ${IMGPROXY_SALT}
+
+      # Enable WebP/AVIF if desired
+      IMGPROXY_ENABLE_WEBP_DETECTION: true
+      IMGPROXY_ENABLE_AVIF_DETECTION: true
+
+      # Optional: restrict max resolution
+      IMGPROXY_MAX_SRC_RESOLUTION: 50
+
+      # Example S3/MinIO backend
+      # IMGPROXY_S3_ENDPOINT: http://minio:9000
+      # IMGPROXY_S3_REGION: us-east-1
+      # IMGPROXY_S3_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      # IMGPROXY_S3_SECRET_KEY: ${MINIO_SECRET_KEY}
+
+    networks:
+      - traefik
+
+    labels:
+      traefik.enable: true
+      traefik.http.services.imgproxy.loadbalancer.server.port: 8080
+
+      # allow http traffic on local server - redirect to https
+      traefik.http.routers.imgproxy-http.entrypoints: web
+      traefik.http.routers.imgproxy-http.rule: Host(`imgproxy.localhost`)
+
+      # https configuration
+      traefik.http.routers.imgproxy-https.entrypoints: websecure
+      traefik.http.routers.imgproxy-https.rule: Host(`imgproxy.localhost`)
+      traefik.http.routers.imgproxy-https.middlewares: security@file, compression@file
+      traefik.http.routers.imgproxy-https.tls: true
+
+networks:
+  traefik:
+    external: true

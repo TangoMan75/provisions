@@ -1,0 +1,11 @@
+{
+	"auto_indent": false,
+	"translate_tabs_to_spaces": false,
+	"delimiter_mapping": {
+		"*.csv": ",",
+		"*.md": "|",
+		"*.tsv": "\t"
+	},
+	"delimiter": ",",
+	"auto_quote": true
+}
