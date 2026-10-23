@@ -1,0 +1,14 @@
+{
+  "Markdown JavaScript Code Block": {
+    "prefix": "javascript",
+    "body": [
+      "```javascript",
+      "function (e) {",
+      "    ${0}",
+      "}",
+      "```"
+    ],
+    "description": "Insert a JavaScript code block",
+    "scope": "markdown"
+  }
+}

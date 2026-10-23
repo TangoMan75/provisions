@@ -1,0 +1,12 @@
+{
+  "Markdown Bash Code Block": {
+    "prefix": "bash",
+    "body": [
+      "```bash",
+      "\\$ ${0}",
+      "```"
+    ],
+    "description": "Insert a bash code block with $ prompt",
+    "scope": "markdown"
+  }
+}
