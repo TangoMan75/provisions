@@ -1,0 +1,14 @@
+{
+  "Markdown PHP Code Block": {
+    "prefix": "php",
+    "body": [
+      "```php",
+      "<?php",
+      "",
+      "${0}",
+      "```"
+    ],
+    "description": "Insert a PHP code block",
+    "scope": "markdown"
+  }
+}

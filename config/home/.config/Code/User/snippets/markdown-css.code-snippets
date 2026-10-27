@@ -1,0 +1,14 @@
+{
+  "Markdown CSS Code Block": {
+    "prefix": "css",
+    "body": [
+      "```css",
+      "${1}: {",
+      "    ${2}: ${3};",
+      "}",
+      "```"
+    ],
+    "description": "Insert a CSS code block",
+    "scope": "markdown"
+  }
+}
