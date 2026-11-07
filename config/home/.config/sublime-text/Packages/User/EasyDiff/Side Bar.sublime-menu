@@ -1,0 +1,38 @@
+[
+  {
+    "caption": "-"
+  },
+  {
+    "caption": "EasyDiff",
+    "children": [
+      {
+        "command": "easy_diff_compare_both",
+        "args": {
+          "paths": []
+        }
+      },
+      {
+        "command": "easy_diff_compare_both",
+        "args": {
+          "clipboard": true,
+          "paths": []
+        }
+      },
+      {
+        "caption": "Git Diff",
+        "command": "easy_diff_git",
+        "args": {
+          "paths": []
+        }
+      },
+      {
+        "caption": "Git Diff with Previous Revision",
+        "command": "easy_diff_git",
+        "args": {
+          "last": true,
+          "paths": []
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,36 @@
+---
+
+services:
+  thumbor:
+    image: ghcr.io/thumbor/thumbor:latest
+    container_name: thumbor
+    restart: unless-stopped
+    ports:
+      - "8888:8888"
+    environment:
+      THUMBOR_PORT: 8888
+      MAX_WIDTH: 4096
+      MAX_HEIGHT: 4096
+      QUALITY: 85
+      SECURITY_KEY: ${THUMBOR_SECURITY_KEY}
+
+    networks:
+      - traefik
+
+    labels:
+      traefik.enable: true
+      traefik.http.services.thumbor.loadbalancer.server.port: 8888
+
+      # allow http traffic on local server - redirect to https
+      traefik.http.routers.thumbor-http.entrypoints: web
+      traefik.http.routers.thumbor-http.rule: Host(`thumbor.localhost`)
+
+      # https configuration
+      traefik.http.routers.thumbor-https.entrypoints: websecure
+      traefik.http.routers.thumbor-https.rule: Host(`thumbor.localhost`)
+      traefik.http.routers.thumbor-https.middlewares: security@file, compression@file
+      traefik.http.routers.thumbor-https.tls: true
+
+networks:
+  traefik:
+    external: true

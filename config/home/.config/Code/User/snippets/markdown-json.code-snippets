@@ -1,0 +1,16 @@
+{
+  "Markdown JSON Code Block": {
+    "prefix": "json",
+    "body": [
+      "```json",
+      "[",
+      "    {",
+      "        \"${1}\": \"${0}\"",
+      "    }",
+      "]",
+      "```"
+    ],
+    "description": "Insert a JSON code block",
+    "scope": "markdown"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "Markdown Diff Code Block": {
+    "prefix": "diff",
+    "body": [
+      "```diff",
+      "- ${1}",
+      "+ ${2}",
+      "```"
+    ],
+    "description": "Insert a diff code block",
+    "scope": "markdown"
+  }
+}

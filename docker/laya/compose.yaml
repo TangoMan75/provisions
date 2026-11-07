@@ -1,0 +1,99 @@
+---
+
+# Laya Docker Compose
+#
+# Builds the Jev-compatible inference API (`laya-serve`) from the upstream repository
+# and publishes it through the shared Traefik reverse proxy.
+#
+# Quick start:
+#   1. cp .env.dist .env   # set LAYA_API_KEY
+#   2. docker compose up -d --build --wait
+#   3. curl -s https://laya.localhost/health
+#
+# First boot downloads the selected checkpoints into a named volume, allow several minutes.
+# For more info: https://github.com/NandhaKishorM/laya
+
+services:
+  laya:
+    image: laya:local
+    build:
+      context: https://github.com/NandhaKishorM/laya.git
+      args:
+        TORCH_INDEX: "${LAYA_TORCH_INDEX:-cpu}"
+        TORCH_VERSION: "${LAYA_TORCH_VERSION:-2.14.0}"
+    container_name: laya
+    restart: unless-stopped
+    init: true
+
+    # Overrides the image's one-shot quickstart CMD; the ENTRYPOINT that loads *_FILE
+    # secrets still runs first.
+    command: ["laya-serve"]
+
+    environment:
+      LAYA_HOST: "0.0.0.0"
+      LAYA_PORT: "${LAYA_PORT:-8000}"
+      LAYA_DEVICE: "${LAYA_DEVICE:-cpu}"
+      # Bearer token required on every request except /health.
+      LAYA_API_KEY: "${LAYA_API_KEY:?Set LAYA_API_KEY in .env}"
+      # FastAPI's external URL prefix behind a reverse proxy; forward stripped paths.
+      LAYA_ROOT_PATH: "${LAYA_ROOT_PATH:-}"
+      # 1 builds every checkpoint at startup so the first request does not pay for it.
+      LAYA_PRELOAD: "${LAYA_PRELOAD:-0}"
+      LAYA_MODELS: "${LAYA_MODELS:-}"
+      LAYA_THREADS: "${LAYA_THREADS:-${OMP_NUM_THREADS:-4}}"
+      LAYA_LOG_LEVEL: "${LAYA_LOG_LEVEL:-info}"
+      # Checkpoint router alias: auto, english, multilingual, typed-decisions.
+      LAYA_MODEL: "${LAYA_MODEL:-auto}"
+      HF_HUB_OFFLINE: "${HF_HUB_OFFLINE:-0}"
+      HF_TOKEN: "${HF_TOKEN:-}"
+      OMP_NUM_THREADS: "${OMP_NUM_THREADS:-4}"
+
+    volumes:
+      # Weights stay between restarts; delete with `docker compose down --volumes`.
+      - model-cache:/home/laya/.cache/huggingface
+      # Optional secret files, readable by UID 10001. The *_FILE variable is read once at
+      # startup then removed before the server execs.
+      # - ${HF_TOKEN_PATH:?Set HF_TOKEN_PATH}:/run/secrets/hf_token:ro
+      # - ${LAYA_API_KEY_PATH:?Set LAYA_API_KEY_PATH}:/run/secrets/laya_api_key:ro
+
+    # Only reachable from the Traefik network by default. Uncomment for a loopback debug port.
+    # ports:
+    #   - "127.0.0.1:${LAYA_PORT:-8000}:${LAYA_PORT:-8000}"
+
+    expose:
+      - "${LAYA_PORT:-8000}"
+
+    # The server preloads before it binds, so /health answers once the preloaded
+    # checkpoints are ready. `up --wait` therefore waits for a usable server.
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os, urllib.request; urllib.request.urlopen('http://127.0.0.1:' + os.environ['LAYA_PORT'] + '/health', timeout=4)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10m
+      start_interval: 2s
+
+    networks:
+      - traefik
+
+    labels:
+      traefik.enable: true
+      traefik.http.services.laya.loadbalancer.server.port: "${LAYA_PORT:-8000}"
+
+      # allow http trafic on local server
+      traefik.http.routers.laya-http.entrypoints: web
+      traefik.http.routers.laya-http.rule: Host(`laya.localhost`)
+
+      # https configuration
+      traefik.http.routers.laya-https.entrypoints: websecure
+      traefik.http.routers.laya-https.rule: Host(`laya.localhost`)
+      traefik.http.routers.laya-https.middlewares: security@file, compression@file
+      traefik.http.routers.laya-https.tls: true
+
+volumes:
+  model-cache:
+    name: "${LAYA_CACHE_VOLUME:-laya_model-cache}"
+
+networks:
+  traefik:
+    external: true

@@ -1,0 +1,12 @@
+{
+  "Markdown Code Block": {
+    "prefix": "md",
+    "body": [
+      "```markdown",
+      "${0}",
+      "```"
+    ],
+    "description": "Insert a markdown code block",
+    "scope": "markdown"
+  }
+}

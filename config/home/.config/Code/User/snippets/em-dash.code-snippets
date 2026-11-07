@@ -1,0 +1,8 @@
+{
+  "Em Dash": {
+    "prefix": "--",
+    "body": ["\\u2014 "],
+    "description": "Insert em dash",
+    "scope": "text.html.markdown,text.plain"
+  }
+}
