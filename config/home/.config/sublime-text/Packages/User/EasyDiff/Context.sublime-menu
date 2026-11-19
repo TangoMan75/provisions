@@ -1,0 +1,22 @@
+[
+  {
+    "caption": "-"
+  },
+  {
+    "command": "easy_diff_compare_both",
+    "args": {
+      "clipboard": true
+    }
+  },
+  {
+    "caption": "Git Diff",
+    "command": "easy_diff_git"
+  },
+  {
+    "caption": "Git Diff with Previous Revision",
+    "command": "easy_diff_git",
+    "args": {
+      "last": true
+    }
+  }
+]
